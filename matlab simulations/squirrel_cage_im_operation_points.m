@@ -28,18 +28,72 @@ imp=paralel+Rs+Xs*1j;                               %stator+rotor+magn branch eq
 Is=V./imp;                                          %stator current
 Vr=Is.*paralel;                                     %middle voltage
 Ir=Vr./(Rr./s+1j*Xr);                               %rotor current
+
 Telec1=3*abs(Ir.^2)*Rr./(s*ws);                     %Electrical Torque=Power/(s)ws
 
 
-subplot(2,1,1);
+subplot(3,1,1);
 plot(s,Telec1,'LineWidth',2);grid on;
 xlabel('s slip [-]','FontSize',14);
 ylabel('T_{electric} fast shaft [Nm]','FontSize',14);
 legend('Machine Torque')
 
 
-subplot(2,1,2);
+subplot(3,1,2);
 plot((1-s)*ws*30/pi,Telec1,'LineWidth',2);grid on;
 xlabel('w_2 fast shaft [rpm]','FontSize',14);
 ylabel('T_{elec} fast shaft [Nm]','FontSize',14);
 legend('Machine Torque')
+
+%% Turbine parameters
+% Cp values [Cp values from the rable]
+
+c1=0.44;
+c2=125;
+c3=0;c4=0;c5=0;
+c6=6.94;
+c7=16.5;
+c8=0;
+c9=-0.002;
+
+% WT parameters
+R_turbina=38;               % WT radius
+A=pi*R_turbina^2;           % Area
+rho=1.225;                  % Air density
+angle_pitch=0;              % Pitch angle
+n_multiplicador = 60;       % Transmission ratio (gearbox)
+
+%% Curve [Speed - turbine torque]
+% Calculation for different shaft speed and for different wind speeds
+
+w2=0:1:314;                     % Vector of machine speeds
+
+
+for ii=1:1:6                                                                            % Creation of the 'for' loop. It will execute it 6 times, as defined (1:1:6)
+    vw=1+ii*2;                                                                          % Wind speed (for simplicity, we calculate it based on the iteration number)
+    clear tsr;                                                                          % Clear the tip speed ratio for the calculation of the current iteration
+    tsr= w2*R_turbina/(n_multiplicador*vw);                                             % Calculation of the TSR for the current wind speeds [vw] and the linear blade speed [w2*R_turbina/(n_multiplicador)]
+    k1=(tsr+c8*angle_pitch).^(-1)-c9/(1+angle_pitch^3);                                 % aux variable for the cp calculation
+    cp=max(0,c1*(c2*k1-c3*angle_pitch-c4*angle_pitch^c5-c6).*exp(-c7*k1));              % Calculation of the Cp constant for the current iteration
+    T_turbina(ii,:) = (1/n_multiplicador)*0.5*rho*A*cp*vw^3.*(w2/n_multiplicador).^-1;  % Turbine torque (fast shaft)
+    txt{ii}=['Wind=' num2str(vw) ' m/s'];                                               % Creation of a 'txt' vector for the legend
+end
+
+%Grafic [Velocitat eix - Parell turbina]
+subplot(3,1,3);
+plot(w2*30/pi,T_turbina,'LineWidth',2);grid on; % plots the turbine to the speed of the machine
+xlabel('\omega_2 fast shaft [rpm]','FontSize',14); % x axis label
+ylabel('T_2 fast shaft [Nm]','FontSize',14); % y axis label
+legend(txt); % legend
+title('Speed - Turbine torque') % title
+
+
+%% Graphic code
+figure();
+plot(w2*30/pi,T_turbina,'LineWidth',2);grid on;
+hold on
+plot((1-s)*ws*30/pi,-Telec1,'LineWidth',2);grid on;
+xlabel('\omega_2 fast shaft [rpm]','FontSize',14);
+ylabel('T_2 fast shaft [Nm]','FontSize',14);
+legend(txt); 
+title('Speed - Turbine torque') % title
