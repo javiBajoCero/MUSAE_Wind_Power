@@ -17,15 +17,20 @@ rotor_nominal_speed =16;    %[1/min]
 moment_of_inertia   =9e6;   %[kgm2]
 damping_factor      =7.5e6; %[Nm/rad]
 transmission_ratio  =80;    %[]
+angle_pitch=0;              % blade P i t ch a n g l e
+
 
 %Electrical parameters of the wind turbine (generator)  
 power               =2e6;   %[W]
 nominal_voltage     =960;   %[Vph-ph]
+grid_freq           =50;    %[Hz]
 nominal_current     =1300;  %[A]
 connection          ="delta";
 pole_pairs          =2;     %[]
 rated_speed_50hz    =1500;  %[1/min]
 moment_of_inertia   =90;    %[kgm2]
+w_ini               =2*pi*25/80 ; % I n i t i a l sp e ed o f th e mach ine
+
 
 stator_resistance   =0.005; %[ohms]
 stator_leakage_inductance   =4e-4;%[H]
@@ -42,6 +47,13 @@ c6 = 6.94 ;
 c7 = 16.5 ;
 c8 =0;
 c9 = -0.002;
+
+%% Obtention of the turbine [tipspeedratio(TSR)−Cp] curve
+% CP vs tsr curve creation
+tsr=0:.1:17;                                                                    %tsr vector from 0a17 withincrements of 0.1
+k1=(tsr+c8*angle_pitch).^(-1)-c9/(1+angle_pitch^3);                             %Auxvariable to calculate Cp
+cp=max(0,c1*(c2*k1-c3*angle_pitch-c4*angle_pitch^c5-c6).*exp(-c7*k1));          %calculation of the Cp for←- different tsrs
+
 
 %% simulation and plots
 simtime=10;
