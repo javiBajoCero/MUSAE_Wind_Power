@@ -1,9 +1,10 @@
-clear;clc;
-vw=[5 8 11 14]; %wind speed values to study (from the exercise)
+clear;
+clc;
+vw=[5 7 11 14]; %wind speed values to study (from the exercise)
 ss=0;           %neglecting slip=0
 rho=1.225;
 N=80;
-D=100;
+D=76;
 poles=2;        %pair of poles
 Ugrid=960;
 f=50;
@@ -16,7 +17,7 @@ lam= wt*(D/2) ./ vw;    %tip speed ratio
 Cpp= 0.0045 * (100 - (lam-10).^2);
 P1=0.5*rho*Cpp*(pi*(D^2)/4).*vw.^3;
 
-vw = [5 8 11 14];
+vw = [5 7 11 14];
 lam = [19.634954084936204 12.271846303085129 8.924979129516457 7.012483601762931];
 Cpp = [0.032254469015270 0.426774214688213 0.444799485576112 0.409836355966191 ];
 P1 = 1.0e+006 * [0.019395272430808 1.051148578283138 2.847988990930852 5.409916510373950];

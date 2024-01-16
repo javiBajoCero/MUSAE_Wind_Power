@@ -50,11 +50,26 @@ c9 = -0.002;
 
 %% Obtention of the turbine [tipspeedratio(TSR)−Cp] curve
 % CP vs tsr curve creation
-tsr=0:.1:17;                                                                    %tsr vector from 0a17 withincrements of 0.1
+tsr=0:.1:17;                                                                    %tsr vector from 0 a 17 withincrements of 0.1
 k1=(tsr+c8*angle_pitch).^(-1)-c9/(1+angle_pitch^3);                             %Auxvariable to calculate Cp
 cp=max(0,c1*(c2*k1-c3*angle_pitch-c4*angle_pitch^c5-c6).*exp(-c7*k1));          %calculation of the Cp for←- different tsrs
 
 
 %% simulation and plots
 simtime=10;
+grid_freq           =50;    %[Hz]
+nominal_voltage     =960;   %[Vph-ph]
+
+
 out=sim("fixed_speed_turbine_simulation.slx");
+
+PPower7 =getdatasamples(out.P,round(1*out.P.Length/4 +out.P.Length/8));
+QPower7 =getdatasamples(out.Q,round(1*out.Q.Length/4 +out.P.Length/8));
+
+PPower11 =getdatasamples(out.P,round(2*out.P.Length/4 +out.P.Length/8));
+QPower11 =getdatasamples(out.Q,round(2*out.Q.Length/4 +out.P.Length/8));
+
+PPower14 =getdatasamples(out.P,round(3*out.P.Length/4 +out.P.Length/8));
+QPower14 =getdatasamples(out.Q,round(3*out.Q.Length/4 +out.P.Length/8));
+
+%% el static state es con el ejercicio de clase
