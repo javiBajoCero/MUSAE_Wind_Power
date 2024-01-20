@@ -40,20 +40,40 @@ magnetizing_inductance=15e-3;%[H]
 iron_branch_equivalent_resistance=140;%[ohms]
 
 % Cp values [ Table ]
-c1 = 0.44;
-c2 =125;
-c3 =0; c4 =0; c5 =0;
-c6 = 6.94 ;
-c7 = 16.5 ;
-c8 =0;
-c9 = -0.002;
+%c1 = 0.44;
+%c2 =125;
+%c3 =0; c4 =0; c5 =0;
+%c6 = 6.94 ;
+%c7 = 16.5 ;
+%c8 =0;
+%c9 = -0.002;
+
+% Cp Optional part2 [ Table ]
+c1 = 0.73;
+c2 =151;
+c3 =0.58; c4 =0.002; c5 =2.14;
+c6 = 13.2 ;
+c7 = 18.4 ;
+c8 =-0.02;
+c9 = -0.003;
 
 %% Obtention of the turbine [tipspeedratio(TSR)−Cp] curve
-% CP vs tsr curve creation
-tsr=0:.1:17;                                                                    %tsr vector from 0 a 17 withincrements of 0.1
-k1=(tsr+c8*angle_pitch).^(-1)-c9/(1+angle_pitch^3);                             %Auxvariable to calculate Cp
-cp=max(0,c1*(c2*k1-c3*angle_pitch-c4*angle_pitch^c5-c6).*exp(-c7*k1));          %calculation of the Cp for←- different tsrs
-
+%calculate CP
+tsr=0:.1:17; 
+ArrayofCp = zeros(length(tsr),length(tsr));
+index=1;
+for angle_pitch=0:.2:17*2
+    pitch=ones(1,length(tsr))*angle_pitch;
+    weird_constant=1./(tsr+c8.*angle_pitch)-(c9./(1+angle_pitch^3));
+    cp=c1.*(c2.*weird_constant -c3.*angle_pitch -c4.*angle_pitch^c5 -c6).*exp(-c7.*weird_constant) ;
+    cp=max(0,cp);
+    plot3(pitch,tsr,cp);
+    grid on;
+    hold on;
+    ArrayofCp(index,:)=cp;
+    index=index+1;
+end
+angle_pitch=0:.2:17*2;
 
 %% simulation and plots
 simtime=10;

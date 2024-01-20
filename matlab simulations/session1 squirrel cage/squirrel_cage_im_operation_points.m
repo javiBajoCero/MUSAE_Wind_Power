@@ -57,20 +57,21 @@ c8=0;
 c9=-0.002;
 
 % WT parameters
-R_turbina=38;               % WT radius
+R_turbina=76/2;               % WT radius
 A=pi*R_turbina^2;           % Area
 rho=1.225;                  % Air density
 angle_pitch=0;              % Pitch angle
-n_multiplicador = 60;       % Transmission ratio (gearbox)
+n_multiplicador = 80;       % Transmission ratio (gearbox)
 
 %% Curve [Speed - turbine torque]
 % Calculation for different shaft speed and for different wind speeds
 
 w2=0:1:314;                     % Vector of machine speeds
 
+vw_array=[7,11,14];
 
-for ii=1:1:6                                                                            % Creation of the 'for' loop. It will execute it 6 times, as defined (1:1:6)
-    vw=1+ii*2;                                                                          % Wind speed (for simplicity, we calculate it based on the iteration number)
+for ii=1:1:3                                                                            % Creation of the 'for' loop. It will execute it 6 times, as defined (1:1:6)
+    vw=vw_array(ii);                                                                          % Wind speed (for simplicity, we calculate it based on the iteration number)
     clear tsr;                                                                          % Clear the tip speed ratio for the calculation of the current iteration
     tsr= w2*R_turbina/(n_multiplicador*vw);                                             % Calculation of the TSR for the current wind speeds [vw] and the linear blade speed [w2*R_turbina/(n_multiplicador)]
     k1=(tsr+c8*angle_pitch).^(-1)-c9/(1+angle_pitch^3);                                 % aux variable for the cp calculation
