@@ -14,9 +14,9 @@ poles=2;
 
 
 Ugrid=960;
-f=50; omega=2*pi*f;
+f=47; omega=2*pi*f;
 %%%%%%%%%%%%%
-vw=14;
+vw=7;
 %%%%%%%%%%%%%%%%%%
 Rs=0.005;
 Xs=omega*4e-4;
@@ -117,8 +117,8 @@ wgrpm=(wg*60/(2*pi))
 
 %two points in the matlab plot for high velocity
  points=find(diff(sign(Paux+Pauxmec)));
-%plot(wgaux(points(1)),-Pauxmec(points(1)),'ok');
-plot(wgaux(points(2)),-Pauxmec(points(2)),'ok');
+plot(wgaux(points(1)),-Pauxmec(points(1)),'ok');
+%plot(wgaux(points(2)),-Pauxmec(points(2)),'ok');
 
 wgrpm=(wgaux(points(2))*60/(2*pi))
 
